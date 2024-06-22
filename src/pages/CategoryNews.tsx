@@ -8,7 +8,7 @@ import MainNews from "../components/MainNews";
 import NewsCard from "../components/NewsCard";
 import { searchNews } from "../reducers/SearchNews";
 import { setCurrPage } from "../slices/newsSlice";
-
+import { useParams } from "react-router-dom";
 interface stateInterface {
   data: {
     news: {
@@ -24,15 +24,15 @@ interface stateInterface {
 }
 const CategoryNews = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const location = useLocation();
-  const category = location.state.category;
+
+  const { category } = useParams();
 
   const [pages, setPages] = useState<null | number>(null);
 
   const { news, loading, totalResults, currPage, searching, searchTerm } =
     useSelector((state: stateInterface) => state.data);
   useEffect(() => {
-    if (!searching)
+    if (!searching && category)
       dispatch(getAllNews({ page: 1, country: "in", category: category }));
   }, [dispatch, category]);
 
@@ -47,7 +47,8 @@ const CategoryNews = () => {
     (page: number) => {
       searching
         ? dispatch(searchNews({ searchWord: searchTerm, page: page }))
-        : dispatch(getAllNews({ page, country: "in", category: category }));
+        : category &&
+          dispatch(getAllNews({ page, country: "in", category: category }));
 
       dispatch(setCurrPage(page));
     },
