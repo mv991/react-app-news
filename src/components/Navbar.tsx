@@ -32,15 +32,15 @@ const Navbar = () => {
   // Debounced fetch function
   const debouncedFetchArticles = useCallback(
     debounce(async (term: any) => {
-  
+ 
       if (term.length===0 && searching) {
-        console.log("tan")
-        dispatch(setSearch({ searching: false, term }));
+     
+        dispatch(setSearch({ searching: false, searchTerm:"" }));
         category && dispatch(getAllNews({ page: 1, country: "in", category: category }));
         return;
       }
 
-      dispatch(searchNews({ searchWord: term, page: 0 }));
+      term.length>0 && dispatch(searchNews({ searchWord: term, page: 0 }));
     }, 1000),
     [] // Use an empty array to ensure the debounced function is only created once
   );
@@ -60,7 +60,7 @@ const Navbar = () => {
           {Categories.map((cat, index) => (
             <Link
               to={`/${Categories[index]}`}
-             
+             onClick={() => {dispatch(setSearch({searching:false})); setSearchTerm("")}}
             >
               <p
                 className={`${

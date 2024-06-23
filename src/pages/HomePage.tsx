@@ -4,33 +4,28 @@ import { AppDispatch } from "../store";
 import MainNews from "../components/MainNews";
 import NewsCard from "../components/NewsCard";
 import Headlines from "../components/Headlines";
-import { NewsType } from "../types";
+import { stateInterface } from "../types";
 import { getAllNews } from "../reducers/GetCatlNews";
+import { searchNews } from "../reducers/SearchNews";
+import { setCurrPage, setSearch } from "../slices/newsSlice";
 
-interface stateInterface {
-  data: {
-    news: {
-      newsData: NewsType[];
-      error: null | string;
-    };
-    loading: string;
-    totalResults: number;
-    currPage: number;
-    searching: boolean;
-  };
-}
 
 const GeneralPage = () => {
   const [pages, setPages] = useState<null | number>(null);
   const dispatch = useDispatch<AppDispatch>();
 
-  const { news, loading, totalResults, currPage, searching } = useSelector(
+  const { news, loading, totalResults, currPage, searching, searchTerm  } = useSelector(
     (state: stateInterface) => state.data
   );
 
   useEffect(() => {
     if (!searching) {
       dispatch(getAllNews({ page: 1, country: "in", category: "general" }));
+    }
+    if(searchTerm.length===0) {
+      dispatch(
+        setSearch({ searching: false, searchTerm:""  })
+      );
     }
   }, [dispatch]);
 
@@ -43,9 +38,13 @@ const GeneralPage = () => {
 
   const handlePageClick = useCallback(
     (page: number) => {
-      dispatch(getAllNews({ page, country: "in", category: "general" }));
+      searching
+        ? dispatch(searchNews({ searchWord: searchTerm, page: page })):
+          dispatch(getAllNews({ page, country: "in", category: "general" }));
+
+      dispatch(setCurrPage(page));
     },
-    [dispatch]
+    [dispatch, searching, currPage]
   );
 
   const renderNumbers = useCallback(() => {
@@ -56,7 +55,9 @@ const GeneralPage = () => {
           <button
             key={i}
             onClick={() => handlePageClick(i)}
-            className="px-2 py-1 m-1 bg-gray-200 rounded"
+            className={`px-2 py-1 m-1 bg-gray-200 rounded ${
+              currPage === i && "text-red-700 underline"
+            }`}
           >
             {i}
           </button>

@@ -34,8 +34,10 @@ const CategoryNews = () => {
 
   useEffect(() => {
     console.log("ran")
-    if (!searching && data.category)
+    if (!searching && data.category) {
       dispatch(getAllNews({ page: 1, country: "in", category: data.category }));
+    }
+
   }, [dispatch,data.category]);
 
   useEffect(() => {

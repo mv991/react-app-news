@@ -61,6 +61,7 @@ const newsSlice = createSlice({
     setSearch: (state, action) => {
        state.searching = action.payload.searching;
        state.searchTerm = action.payload.searchTerm;
+       state.currPage = 1
 
     },
     saveArticles:(state, action) => {
