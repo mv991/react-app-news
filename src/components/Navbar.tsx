@@ -3,20 +3,23 @@ import { Categories } from "../config/config";
 import { getAllNews } from "../reducers/GetCatlNews";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import SearchComponent from "./SearchComponent";
 import { searchNews } from "../reducers/SearchNews";
 import { setSearch } from "../slices/newsSlice";
+import { stateInterface } from "../types";
 // @ts-ignore
 import debounce from "lodash/debounce";
+import { useSelector } from "react-redux";
 const Navbar = () => {
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const [show, setShow] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const pathname = location.pathname;
+  const {category} = useParams();
+  const {searching} = useSelector((state:stateInterface) => state.data);
   const Heading = [
     "Business",
     "Entertainment",
@@ -29,9 +32,11 @@ const Navbar = () => {
   // Debounced fetch function
   const debouncedFetchArticles = useCallback(
     debounce(async (term: any) => {
-      if (!term) {
+  
+      if (term.length===0 && searching) {
+        console.log("tan")
         dispatch(setSearch({ searching: false, term }));
-        dispatch(getAllNews({ page: 1, country: "in", category: pathname }));
+        category && dispatch(getAllNews({ page: 1, country: "in", category: category }));
         return;
       }
 
@@ -55,11 +60,11 @@ const Navbar = () => {
           {Categories.map((cat, index) => (
             <Link
               to={`/${Categories[index]}`}
-              state={{ category: Categories[index] }}
+             
             >
               <p
                 className={`${
-                  "/" + Categories[index] === pathname ? "underline" : ""
+                   Categories[index] === category ? "underline" : ""
                 }`}
               >
                 {Heading[index]}
@@ -110,7 +115,7 @@ const Navbar = () => {
                 {
                   setSearchTerm(e.target.value);
                   dispatch(
-                    setSearch({ searching: true, searchTerm: searchTerm })
+                    setSearch({ searching: true, searchTerm: e.target.value })
                   );
                 }
               }

@@ -20,7 +20,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/:category",
+    path: ":category",
     element: (
       <>
         <Navbar />

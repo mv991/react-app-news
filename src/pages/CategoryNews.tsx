@@ -25,16 +25,18 @@ interface stateInterface {
 const CategoryNews = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { category } = useParams();
+  const data = useParams();
 
   const [pages, setPages] = useState<null | number>(null);
 
   const { news, loading, totalResults, currPage, searching, searchTerm } =
     useSelector((state: stateInterface) => state.data);
+
   useEffect(() => {
-    if (!searching && category)
-      dispatch(getAllNews({ page: 1, country: "in", category: category }));
-  }, [dispatch, category]);
+    console.log("ran")
+    if (!searching && data.category)
+      dispatch(getAllNews({ page: 1, country: "in", category: data.category }));
+  }, [dispatch,data.category]);
 
   useEffect(() => {
     if (totalResults) {
@@ -47,8 +49,8 @@ const CategoryNews = () => {
     (page: number) => {
       searching
         ? dispatch(searchNews({ searchWord: searchTerm, page: page }))
-        : category &&
-          dispatch(getAllNews({ page, country: "in", category: category }));
+        : data.category &&
+          dispatch(getAllNews({ page, country: "in", category: data.category }));
 
       dispatch(setCurrPage(page));
     },
@@ -74,7 +76,7 @@ const CategoryNews = () => {
     }
     return elements;
   }, [pages, handlePageClick]);
-  if (loading)
+  if(loading)
     return (
       <div className="w-screen h-screen text-2xl font-bold flex items-center justify-center">
         Loading...
@@ -86,7 +88,7 @@ const CategoryNews = () => {
     <div>
       <div className="w-full gap-12  h-fit mt-8 font-poppins">
         <h1 className="text-2xl font-bold mb-4 ml-[10%]">
-          {searching ? "Search Results" : category}
+          {searching ? "Search Results" : data.category}
         </h1>
         {news.newsData.length > 0 ? (
           <>

@@ -18,7 +18,7 @@ export const searchNews = createAsyncThunk(
   'news/searchNews',
   async  ({  searchWord,page }: { searchWord:string,page:number}) => {
     console.log(searchWord,"SEARCH WORD")
-     const response = await axios.get(`https://api.thenewsapi.com/v1/news/all?api_token=wnaFPrt95uF8ttK8H2PXe9wlQfGuLjSaPCouGzZV&language=en&limit=3&search=${searchWord}&page=${page}`);
+     const response = await axios.get(`https://api.thenewsapi.com/v1/news/all?api_token=EJaDyBnUilJ5irQJxSNhsBlSg3EExpiR3qjmeokM&limit=3&search=${searchWord}&page=${page}`);
   
     return response.data as GetSearchNews
   }

@@ -10,3 +10,18 @@ export interface  NewsType {
 export interface HaedlineType {
   title:string
 }
+
+
+export interface stateInterface {
+  data: {
+    news: {
+      newsData: NewsType[];
+      error: null | string;
+    };
+    loading: string;
+    totalResults: number;
+    currPage: number;
+    searching: boolean;
+    searchTerm: string;
+  };
+}
