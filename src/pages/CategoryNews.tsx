@@ -122,7 +122,7 @@ const CategoryNews = () => {
               snippet={news.newsData[0].snippet}
             />
 
-            {!searching && <Headlines headlines={headlines.headlineData} />}
+            {/* {!searching && <Headlines headlines={headlines.headlineData} />} */}
 
             <div className="w-full flex flex-wrap gap-6 justify-center mt-12">
               {news.newsData.map((article, index) => {

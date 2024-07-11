@@ -7,6 +7,14 @@ interface props {
   snippet: string;
 }
 const MainNews = ({ urlToImage, title, date, source, snippet }: props) => {
+  function convertTimestampToDate(timestamp: any) {
+    const date = new Date(timestamp);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
   return (
     <div>
       <div className="w-[80%] gap-12 m-auto flex md:flex-row flex-col h-fit mt-8 font-poppins">
@@ -22,7 +30,7 @@ const MainNews = ({ urlToImage, title, date, source, snippet }: props) => {
             Trending
           </p>
           <h1 className="text-2xl font-bold mb-4">{title}</h1>
-          <h1 className="tracking-[2px]">{date}</h1>
+          <h1 className="tracking-[2px]">{convertTimestampToDate(date)}</h1>
           <p className="text-[#2A2A2A] font-light mt-6">
             Source: <span className="text-blue-500">{source}</span>
           </p>

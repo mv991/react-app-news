@@ -27,6 +27,14 @@ const NewsCard = ({
   url,
   newsTitle,
 }: NewsCardProps) => {
+  function convertTimestampToDate(timestamp: any) {
+    const date = new Date(timestamp);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
   return (
     <div className="w-full sm:h-[580px] h-fit shadow-2xl  max-w-[400px] sm:m-0 mx-auto my-3 rounded-md   bg-white">
       <Link to={url} target="_blank" className="sm:w-[370px] w-[85%]">
@@ -39,7 +47,9 @@ const NewsCard = ({
           <h1 className="text-lg font-bold ">{title}</h1>
           <p className="font-medium ">
             Published at:{" "}
-            <span className="ml-2 font-normal ">{published_at}</span>{" "}
+            <span className="ml-2 font-normal ">
+              {convertTimestampToDate(published_at)}
+            </span>{" "}
           </p>
           <p>
             <span>{snippet}</span>
