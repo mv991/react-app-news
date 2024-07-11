@@ -3,9 +3,8 @@ import { Categories } from "../config/config";
 import { getAllNews } from "../reducers/GetCatlNews";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import SearchComponent from "./SearchComponent";
 import { searchNews } from "../reducers/SearchNews";
 import { setSearch } from "../slices/newsSlice";
 import { stateInterface } from "../types";
@@ -13,13 +12,12 @@ import { stateInterface } from "../types";
 import debounce from "lodash/debounce";
 import { useSelector } from "react-redux";
 const Navbar = () => {
-  const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const [show, setShow] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const {category} = useParams();
-  const {searching} = useSelector((state:stateInterface) => state.data);
+  const { category } = useParams();
+  const { searching } = useSelector((state: stateInterface) => state.data);
   const Heading = [
     "Business",
     "Entertainment",
@@ -29,20 +27,18 @@ const Navbar = () => {
     "Technology",
   ];
 
-  // Debounced fetch function
   const debouncedFetchArticles = useCallback(
     debounce(async (term: any) => {
- 
-      if (term.length===0 && searching) {
-     
-        dispatch(setSearch({ searching: false, searchTerm:"" }));
-        category && dispatch(getAllNews({ page: 1, country: "in", category: category }));
+      if (term.length === 0 && searching) {
+        dispatch(setSearch({ searching: false, searchTerm: "" }));
+        category &&
+          dispatch(getAllNews({ page: 1, country: "in", category: category }));
         return;
       }
 
-      term.length>0 && dispatch(searchNews({ searchWord: term, page: 0 }));
+      term.length > 0 && dispatch(searchNews({ searchWord: term, page: 0 }));
     }, 1000),
-    [] // Use an empty array to ensure the debounced function is only created once
+    [searchTerm, searching] // Use an empty array to ensure the debounced function is only created once
   );
   useEffect(() => {
     // Call the debounced function with the current search term
@@ -52,7 +48,7 @@ const Navbar = () => {
     return () => {
       debouncedFetchArticles.cancel();
     };
-  }, [searchTerm, debouncedFetchArticles]);
+  }, [searchTerm, debouncedFetchArticles, searching]);
   return (
     <>
       <div className="flex gap-8 w-full text-white h-[100px] items-center font-poppins bg-[#C31815] z-[2] px-8 ">
@@ -60,11 +56,14 @@ const Navbar = () => {
           {Categories.map((cat, index) => (
             <Link
               to={`/${Categories[index]}`}
-             onClick={() => {dispatch(setSearch({searching:false})); setSearchTerm("")}}
+              onClick={() => {
+                dispatch(setSearch({ searching: false }));
+                setSearchTerm("");
+              }}
             >
               <p
                 className={`${
-                   Categories[index] === category ? "underline" : ""
+                  Categories[index] === category ? "underline" : ""
                 }`}
               >
                 {Heading[index]}
@@ -90,58 +89,22 @@ const Navbar = () => {
           />
         </svg>
 
-        <div className=" ml-auto flex items-center justify-end lg:w-[20%] w-fit">
-          <svg
-            width="20"
-            height="26"
-            viewBox="0 0 10 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="mr-3 shrink-0"
-          >
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M5 12L0 16V1C0 0.447715 0.447715 0 1 0H9C9.55228 0 10 0.447715 10 1V16L5 12ZM9 2C9 1.44772 8.55228 1 8 1H2C1.44772 1 1 1.44772 1 2V14L5 10.5L9 14V2Z"
-              fill="white"
-            />
-          </svg>
+        <div className=" ml-auto flex items-center justify-end lg:w-[22%] w-fit">
+          <input
+            onChange={(e: any) =>
+              //@ts-ignore
 
-          {showSearch ? (
-            <input
-              onChange={(e: any) =>
-                //@ts-ignore
-
-                {
-                  setSearchTerm(e.target.value);
-                  dispatch(
-                    setSearch({ searching: true, searchTerm: e.target.value })
-                  );
-                }
+              {
+                setSearchTerm(e.target.value);
+                dispatch(
+                  setSearch({ searching: true, searchTerm: e.target.value })
+                );
               }
-              className="p-2 rounded-md text-black"
-              value={searchTerm}
-            />
-          ) : (
-            <svg
-              width="26"
-              height="26"
-              viewBox="0 0 26 26"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="ml-8"
-              onClick={(e: any) => {
-                setShowSearch(true);
-              }}
-            >
-              <path
-                d="M11.2923 20.2211C6.24673 20.2211 2.16223 16.127 2.16223 11.0911C2.16223 6.04553 6.24673 1.96105 11.2923 1.96105C16.3378 1.96105 20.4223 6.04553 20.4223 11.0911C20.4223 16.127 16.3378 20.2211 11.2923 20.2211ZM25.0642 24.1901L18.7501 17.8762C20.3839 16.079 21.3834 13.7051 21.3834 11.0911C21.3834 5.51695 16.8664 1 11.2923 1C5.71815 1 1.20117 5.51695 1.20117 11.0911C1.20117 16.6652 5.71815 21.1821 11.2923 21.1821C13.9064 21.1821 16.2802 20.173 18.0774 18.5489L24.3915 24.863C24.5741 25.0456 24.8816 25.0456 25.0642 24.863C25.2468 24.6708 25.2468 24.3727 25.0642 24.1901Z"
-                fill="#F7F4F4"
-                stroke="white"
-                stroke-width="0.5"
-              />
-            </svg>
-          )}
+            }
+            className="p-2 rounded-md text-black w-full pl-3"
+            value={searchTerm}
+            placeholder="Search News Stories"
+          />
         </div>
       </div>
       {show && <Sidebar setShow={setShow} />}

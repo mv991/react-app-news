@@ -1,35 +1,33 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { fetchLatestNews } from "../reducers/getLatestNews";
-import { useAppSelector, useAppDispatch } from "../hooks";
-import { HaedlineType } from "../types";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { setInterval } from "timers/promises";
 
-interface stateInterface {
-  data: {
-    headlines: {
-      headlineData: HaedlineType[];
-      error: null | string;
-    };
-    loading: string;
-  };
+interface props {
+  headlines: [{ title: string }];
 }
-const Headlines = () => {
-  const dispatch = useAppDispatch();
-  const { headlines, loading } = useSelector(
-    (state: stateInterface) => state.data
-  );
+const Headlines = ({ headlines }: props) => {
+  const [index, setIndex] = useState(0);
   useEffect(() => {
-    if (headlines.error === null && !loading) {
-      // dispatch(fetchLatestNews({ country: "in" }));
-    }
-  }, [dispatch, fetchLatestNews]);
-  console.log(headlines, "haedline");
-  if (loading) return <div>Loading .....</div>;
-  if (headlines.error) return <div>{headlines.error}</div>;
+    const interval: any = window.setInterval(() => {
+      if (index < 19) {
+        console.log("ran", index);
+        setIndex((prevIndex) => prevIndex + 1);
+      } else {
+        setIndex(0);
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [index]);
+  useEffect(() => {
+    console.log(index);
+  }, [index]);
+
   return (
-    <div className="w-full h-[70px] bg-[#C31815] text-white mt-[60px] ">
-      {headlines?.headlineData[0]?.title}
+    <div className="w-full sm:h-[70px] h-fit bg-[#C31815] text-white mt-[60px] flex items-center justify-start gap-4 ">
+      <button className="bg-white py-3 px-4 w-[200px] text-black ml-8">
+        Breaking News
+      </button>{" "}
+      {headlines[index]?.title}
     </div>
   );
 };

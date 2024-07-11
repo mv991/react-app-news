@@ -85,7 +85,8 @@ const newsSlice = createSlice({
       });
       builder.addCase(fetchLatestNews.fulfilled,(state,action) => {
         state.loading = false;
-        state.headlines.headlineData = action.payload
+        state.headlines.headlineData = action.payload;
+   
   
       });
       builder.addCase(fetchLatestNews.rejected,(state,action) => {

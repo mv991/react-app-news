@@ -1,14 +1,18 @@
 export interface  NewsType {
       title: string;
-  description: string;
-  source_url: string;
+  published_at: string;
+  source: string;
   image_url: string;
   content:string
   uuid:string
+  snippet:string
+  url:string
 }
 
 export interface HaedlineType {
-  title:string
+  articles:[{
+   title:string
+  }]
 }
 
 
@@ -24,4 +28,20 @@ export interface stateInterface {
     searching: boolean;
     searchTerm: string;
   };
+}
+export interface  AllNewsInterface {
+  data:[{
+    title: string;
+  published_at: string;
+  source: string;
+  image_url:string
+  content:string
+  uuid:string
+  snippet:string
+  url:string
+  }]
+  meta:{
+    found:number
+  }
+  
 }

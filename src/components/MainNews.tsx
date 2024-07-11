@@ -1,11 +1,12 @@
 import React from "react";
 interface props {
   title: string;
-  description: string;
+  date: string;
   source: string;
   urlToImage: string;
+  snippet: string;
 }
-const MainNews = ({ urlToImage, title, description, source }: props) => {
+const MainNews = ({ urlToImage, title, date, source, snippet }: props) => {
   return (
     <div>
       <div className="w-[80%] gap-12 m-auto flex md:flex-row flex-col h-fit mt-8 font-poppins">
@@ -21,9 +22,11 @@ const MainNews = ({ urlToImage, title, description, source }: props) => {
             Trending
           </p>
           <h1 className="text-2xl font-bold mb-4">{title}</h1>
-          <h1 className="tracking-[2px]">{description}</h1>
-          <p className="text-[#2A2A2A] font-light mt-6">Source: {source}</p>
-          <p className="text-[#2A2A2A] font-light mt-1">Date: {source}</p>
+          <h1 className="tracking-[2px]">{date}</h1>
+          <p className="text-[#2A2A2A] font-light mt-6">
+            Source: <span className="text-blue-500">{source}</span>
+          </p>
+          <p className="text-[#2A2A2A] font-light mt-1">{snippet}</p>
         </div>
       </div>
     </div>
